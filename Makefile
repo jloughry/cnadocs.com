@@ -34,7 +34,7 @@ all::
 	@echo $$(($$(cat $(build_counter)) + 1)) > $(build_counter)
 	make commit
 	@echo "Now copy the files to the new web server; this isn't it."
-	scp blog.html freebsd@cnadocs.com
+	scp blog.html freebsd@cnadocs.com:
 
 clean::
 	rm -fv $(temporary_files)

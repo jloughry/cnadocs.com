@@ -2,12 +2,6 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <script type="text/javascript">
-            var host = "call-with-current-continuation.com";
-            if ((host == window.location.host) && (window.location.protocol != "https:")) {
-                window.location.protocol = "https";
-            }
-        </script>
 		<meta name="keywords" content="Scheme language, blog"/>
 		<meta name="author" content="Joe Loughry"/>
 		<meta name="description" content="Blogging about mostly Scheme-related topics"/>
@@ -45,11 +39,16 @@
 			<span class="headline-comment">;; blog</span>
 		</h1></a>
 
-        <a href="https://travis-ci.org/jloughry/jloughry.github.io"><img
-            src="https://travis-ci.org/jloughry/jloughry.github.io.svg"
-            alt="build status"/></a>
-
         <!-- end of page header -->
+
+        <h2 id="noMoreJavasSript">HTTPS</h2>
+        <p class="posting-date">1st September 2017</p>
+
+        <p>HTTPS is forced by the web server now, obviating any need for
+        the JavaScript formerly used in the page header to redirect all
+        <code>http://</code> connections to <code>https://</code>
+        automatically.
+        </p>
 
         <h2 id="resume">Latest résumé</h2>
         <p class="posting-date">18th April 2017</p>
@@ -1092,7 +1091,7 @@
 				--><code>2C3B 11A1 CE7C 5B1F 87BC  F5D0 299D 7116 EDC2 ABE5</code></a></p>
 
 		<hr class="footnote">
-		<p class="footnote"><!-- BUILD NUMBER -->Build 171</p>
+		<p class="footnote"><!-- BUILD NUMBER -->Build 175</p>
 	</body>
 </html>
 
