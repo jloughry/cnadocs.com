@@ -33,7 +33,7 @@ all::
 		$(404_page)
 	@echo $$(($$(cat $(build_counter)) + 1)) > $(build_counter)
 	make commit
-	@echo "Now copy the files to the new web server; this isn't it."
+	@echo "Now copy the files to the web server; this isn't it."
 	scp blog.html freebsd@cnadocs.com:
 
 clean::
@@ -83,112 +83,5 @@ spell::
 
 github_repository_level = ~/thesis/github
 
-#
-# This Makefile does not include common.mk but instead incorporates much
-# of its content. The reason is because the CI tool used by GitHub pages
-# to build web sites doesn't play well with symlinks; fix it later.
-#
-
-bibtex_file = consolidated_bibtex_file.bib
-bibtex_source = $(github_repository_level)/bibtex/consolidated_bibtex_source.bib
-
-commit_message = /tmp/commit_message.txt
-get_commit_message = get_commit_message.sh
-fix_bad_commits = fix_bad_commits.sh
-
-#
-# double-colon targets are done in addition to anything that might exist in the parent Makefile.
-#
-
-.PHONY: all clean allclean spell readme commit commit_only sync \
-		notes quotes cv symlink-to-bibtex-file commit-bibtex
-
-all:: symlink-to-bibtex-file
-	@echo "Build `cat $(build_counter)`"
-	@echo "This is \"all\" in the common.mk file."
-
-clean::
-	@echo "This is \"clean\" in the common.mk file."
-	rm -fv README.md.bak $(commit_message)
-
-spell::
-	aspell --lang=en_GB -H check README.md
-
-readme:
-	vi README.md
-
-#
-# I have been completely unable to find a solution to the problem of Makefiles
-# failing to notice when the consolidated_bibtex_file.bib has changed. It's as
-# if `make' is not looking through the symlink, but the manual says it should.
-#
-
-$(bibtex_file): symlink-to-bibtex-file
-
-#
-# This works like a lazy evaluation for commit message.
-#
-
-$(commit_message): $(get_commit_message)
-	@./$(get_commit_message)
-
-commit:
-	make commit_only
-	make sync
-
-commit-bibtex:
-	(cd $(github_repository_level)/bibtex && make commit)
-
-#
-# convenience target in case I mis-type the underscore.
-#
-
-commit-only: commit_only
-
-#
-# Defensive targets in case I mis-type `vi' as `ci': ci and co are old RCS
-# commands and I don't want those ever running.
-#
-
-.PHONY: ci co
-
-ci co:
-	@echo "Did you mean 'vi'?"
-
-commit_only:
-	@if [ ! -d .git ]; then \
-		echo                                                   ; \
-		echo "Not in a Git respository. Try going up a level." ; \
-		echo                                                   ; \
-		/bin/false                                             ; \
-	else \
-		make clean                                             ; \
-		make $(commit_message)                                 ; \
-		git add .                                              ; \
-		git commit -aF $(commit_message)                       ; \
-		rm -fv $(commit_message)                               ; \
-	fi
-
-sync:
-	@if [ ! -d .git ]; then \
-		echo                                                   ; \
-		echo "Not in a Git respository. Try going up a level." ; \
-		echo                                                   ; \
-		/bin/false                                             ; \
-	else \
-		git pull                                               ; \
-		git push                                               ; \
-	fi
-
-notes:
-	(cd $(github_repository_level)/notes.new && make notes)
-
-quotes:
-	(cd $(github_repository_level)/notes.new && make quotes)
-
-bibtex:
-	(cd $(github_repository_level)/bibtex && make vi)
-
-cv:
-	(cd $(github_repository_level)/CV && make vi loughry_cv.tex)
+include common.mk
 
