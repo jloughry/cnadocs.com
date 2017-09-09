@@ -1,5 +1,7 @@
 target = $(blog_page)
 
+include ../notes.new/private_for_cnadocs.com.mk
+
 css_file = style.css
 scheme_file = index.scm
 unicode_test = unicode_font_test_page.html
@@ -33,8 +35,13 @@ all::
 		$(404_page)
 	@echo $$(($$(cat $(build_counter)) + 1)) > $(build_counter)
 	make commit
-	@echo "Now copy the files to the web server; this isn't it."
-	scp blog.html freebsd@cnadocs.com:
+	make upload
+
+upload: $(target)
+	scp $< $(private_web_server_for_cnadocs):
+	ssh -t $(private_web_server_for_cnadocs) sudo mv $< www
+	ssh -t $(private_web_server_for_cnadocs) sudo chown www:www www/$<
+	ssh -t $(private_web_server_for_cnadocs) ls -l www/$<
 
 clean::
 	rm -fv $(temporary_files)
