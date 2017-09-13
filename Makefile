@@ -43,6 +43,9 @@ upload: $(target)
 	ssh -t $(private_web_server_for_cnadocs) sudo chown www:www www/$<
 	ssh -t $(private_web_server_for_cnadocs) ls -l www/$<
 
+ssh:
+	ssh $(private_web_server_for_cnadocs)
+
 clean::
 	rm -fv $(temporary_files)
 
@@ -81,14 +84,6 @@ spell::
 	aspell --lang=en_GB -H check $(company_page)
 	aspell --lang=en_GB -H check $(404_page)
 
-#
-# I hate to hard-code this path, because the resulting functionality only
-# works for repositories underneath my `github' directory, but trying to
-# make automation too intelligent violates the YAGNI principle and I have
-# a thesis to write.
-#
-
-github_repository_level = ~/thesis/github
 
 include common.mk
 
